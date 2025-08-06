@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "name": "whatsapp-web-clone",
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/next"
+        }
+    ],
+    "env": {
+        "NEXT_PUBLIC_API_URL": "@whatsapp-api-url"
+    },
+    "build": {
+        "env": {
+            "NEXT_PUBLIC_API_URL": "@whatsapp-api-url"
+        }
+    }
+}
