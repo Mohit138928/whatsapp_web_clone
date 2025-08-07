@@ -40,7 +40,7 @@ const MessageBubble = ({ message }) => {
         className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
           isOutgoing
             ? "bg-green-800 text-white rounded-br-none"
-            : "bg-white dark:bg-gray-700 border rounded-bl-none"
+            : "bg-white dark:bg-[#242626] border-none rounded-bl-none"
         }`}
       >
         <p className="text-sm">{message.text}</p>
@@ -107,7 +107,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
 
   if (!chat) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#0b141a]">
         <div className="text-center text-gray-500">
           <div className="w-64 h-64 mx-auto mb-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
             <svg
@@ -139,7 +139,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b bg-gray-50 dark:bg-gray-800">
+      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-[#0b141a] border-none">
         <div className="flex items-center space-x-3">
           {onBack && (
             <Button
@@ -180,7 +180,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
       {/* Messages Area */}
       <div className="flex-1 relative">
         <div
-          className="absolute inset-0 bg-gray-50 dark:bg-gray-900"
+          className="absolute inset-0 bg-gray-50 dark:bg-[#0b141a]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3f4f6' fill-opacity='0.3' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E")`,
           }}
@@ -218,7 +218,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
       {/* Message Input */}
       <form
         onSubmit={handleSendMessage}
-        className="p-4 border-t bg-white dark:bg-gray-800"
+        className="p-4 border-none  bg-white dark:bg-[#0b141a]"
       >
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative">
@@ -228,7 +228,7 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
-              className="pr-12"
+              className="pr-12 focus:border-none focus:ring-0 "
               disabled={isTyping}
             />
           </div>

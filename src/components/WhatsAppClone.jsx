@@ -128,9 +128,9 @@ export default function WhatsAppClone() {
   }
 
   return (
-    <div className="h-screen flex bg-white dark:bg-gray-900">
+    <div className="h-screen flex bg-gray-100 dark:bg-[#0b141a]">
       {/* Sidebar */}
-      <div className="w-full md:w-96 border-r border-gray-200 dark:border-gray-700">
+      <div className="w-full md:w-96 border-none flex flex-col">
         <ChatList
           chats={chats}
           activeChat={activeChat}
