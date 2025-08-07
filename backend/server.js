@@ -82,10 +82,57 @@ const Contact = mongoose.model("Contact", contactSchema);
 
 // Socket.IO connection handling
 io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+  console.log("🔌 Client connected:", socket.id);
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
+  // Handle user joining (optional - for presence tracking)
+  socket.on("join-user", (userData) => {
+    socket.userId = userData.userId;
+    socket.join(userData.userId);
+    console.log(`👤 User ${userData.userId} joined`);
+
+    // Broadcast online status
+    socket.broadcast.emit("userOnlineStatus", {
+      wa_id: userData.userId,
+      is_online: true,
+      last_seen: new Date(),
+    });
+  });
+
+  // Handle typing indicators
+  socket.on("typing", (data) => {
+    socket.to(data.chatId).emit("userTyping", {
+      wa_id: data.wa_id,
+      name: data.name,
+      isTyping: true,
+    });
+  });
+
+  socket.on("stop-typing", (data) => {
+    socket.to(data.chatId).emit("userTyping", {
+      wa_id: data.wa_id,
+      name: data.name,
+      isTyping: false,
+    });
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log("🔌 Client disconnected:", socket.id, "Reason:", reason);
+
+    // Broadcast offline status if user was identified
+    if (socket.userId) {
+      socket.broadcast.emit("userOnlineStatus", {
+        wa_id: socket.userId,
+        is_online: false,
+        last_seen: new Date(),
+      });
+    }
+  });
+
+  // Send connection confirmation
+  socket.emit("connected", {
+    socketId: socket.id,
+    timestamp: new Date(),
+    message: "Connected to WhatsApp Web Clone server",
   });
 });
 
@@ -194,6 +241,13 @@ app.post("/api/send", async (req, res) => {
 
     // Emit to all connected clients
     io.emit("newMessage", messageData);
+
+    // Also emit a chat list update event
+    io.emit("chatListUpdate", {
+      type: "new_message",
+      wa_id: messageData.wa_id,
+      message: messageData,
+    });
 
     res.status(201).json({ success: true, message: messageData });
   } catch (error) {

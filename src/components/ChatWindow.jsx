@@ -69,10 +69,16 @@ const MessageBubble = ({ message }) => {
   );
 };
 
-export default function ChatWindow({ chat, onSendMessage, onBack }) {
+export default function ChatWindow({
+  chat,
+  onSendMessage,
+  onBack,
+  connectionStatus,
+}) {
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -106,9 +112,17 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || isTyping) return;
+    if (!newMessage.trim() || isTyping || isSending) return;
+
+    // Check connection status
+    if (connectionStatus !== "connected") {
+      console.warn("Cannot send message: not connected to server");
+      return;
+    }
 
     setIsTyping(true);
+    setIsSending(true);
+
     const messageData = {
       wa_id: chat.wa_id,
       text: newMessage.trim(),
@@ -128,8 +142,10 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
       }
     } catch (error) {
       console.error("Failed to send message:", error);
+      // Show error message to user
     } finally {
       setIsTyping(false);
+      setIsSending(false);
       inputRef.current?.focus();
     }
   };
@@ -251,9 +267,24 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
             </AvatarFallback>
           </Avatar>
           <div className="cursor-pointer">
-            <h3 className="font-medium">{chat.name}</h3>
+            <h3 className="font-medium flex items-center">
+              {chat.name}
+              {connectionStatus === "connected" && chat.is_online && (
+                <span className="ml-2 w-2 h-2 bg-green-500 rounded-full"></span>
+              )}
+            </h3>
             <p className="text-sm text-gray-500">
-              {chat.phone || `+${chat.wa_id}`}
+              {connectionStatus !== "connected" ? (
+                <span className="text-red-500">
+                  {connectionStatus === "reconnecting"
+                    ? "Connecting..."
+                    : "Offline"}
+                </span>
+              ) : chat.is_online ? (
+                "online"
+              ) : (
+                chat.phone || `+${chat.wa_id}`
+              )}
             </p>
           </div>
         </div>
@@ -382,16 +413,6 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
                   disabled={isTyping}
                 />
               </div>
-
-              {/* Attachment/Paperclip Button (inside input) */}
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="flex-shrink-0 w-10 h-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mr-1"
-              >
-                <Paperclip className="w-4 h-4" />
-              </Button>
             </div>
 
             {/* Send/Mic Button */}
@@ -399,17 +420,32 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
               type={newMessage.trim() ? "submit" : "button"}
               className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
                 newMessage.trim()
-                  ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+                  ? connectionStatus === "connected"
+                    ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+                    : "bg-gray-400 text-white cursor-not-allowed"
                   : "bg-green-500 hover:bg-green-600 text-white"
               }`}
-              disabled={isTyping}
+              disabled={
+                isTyping ||
+                isSending ||
+                (newMessage.trim() && connectionStatus !== "connected")
+              }
               onClick={
                 !newMessage.trim()
                   ? () => console.log("Start voice recording")
                   : undefined
               }
+              title={
+                connectionStatus !== "connected"
+                  ? "Not connected"
+                  : newMessage.trim()
+                  ? "Send message"
+                  : "Record voice message"
+              }
             >
-              {newMessage.trim() ? (
+              {isSending ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : newMessage.trim() ? (
                 <Send className="w-5 h-5" />
               ) : (
                 <Mic className="w-5 h-5" />
