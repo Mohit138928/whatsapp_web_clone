@@ -1,0 +1,48 @@
+{
+  "payload_type": "whatsapp_webhook",
+  "_id": "conv1-msg2-api",
+  "metaData": {
+    "entry": [
+      {
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "918329446654",
+                "phone_number_id": "629305560276479"
+              },
+              "contacts": [
+                {
+                  "profile": {
+                    "name": "Ravi Kumar"
+                  },
+                  "wa_id": "919937320320"
+                }
+              ],
+              "messages": [
+                {
+                  "from": "918329446654",
+                  "id": "wamid.HBgMOTE5OTY3NTc4NzIwFQIAEhggNDc4NzZBQ0YxMjdCQ0VFOTk2NzA3MTI4RkZCNjYyMjc=",
+                  "timestamp": "1754400020",
+                  "text": {
+                    "body": "Hi Ravi! Sure, I’d be happy to help you with that. Could you tell me what you're looking for?"
+                  },
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        ],
+        "id": "30164062719905278"
+      }
+    ],
+    "gs_app_id": "conv1-app",
+    "object": "whatsapp_business_account"
+  },
+  "createdAt": "2025-08-06 12:00:20",
+  "startedAt": "2025-08-06 12:00:20",
+  "completedAt": "2025-08-06 12:00:21",
+  "executed": true
+}

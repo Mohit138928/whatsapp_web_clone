@@ -24,7 +24,7 @@ async function testEndpoint(
   expectedStatus = 200
 ) {
   try {
-    log(`\n🧪 Testing ${name}...`, "blue");
+    log(`\nTesting ${name}...`, "blue");
 
     let response;
     const config = {
@@ -41,7 +41,7 @@ async function testEndpoint(
     response = await axios(config);
 
     if (response.status === expectedStatus) {
-      log(`✅ ${name} - PASSED (${response.status})`, "green");
+      log(`${name} - PASSED (${response.status})`, "green");
       if (response.data) {
         console.log(
           `   Response:`,
@@ -51,13 +51,13 @@ async function testEndpoint(
       return true;
     } else {
       log(
-        `❌ ${name} - FAILED (Expected ${expectedStatus}, got ${response.status})`,
+        `${name} - FAILED (Expected ${expectedStatus}, got ${response.status})`,
         "red"
       );
       return false;
     }
   } catch (error) {
-    log(`❌ ${name} - ERROR: ${error.message}`, "red");
+    log(`${name} - ERROR: ${error.message}`, "red");
     if (error.response) {
       console.log(`   Status: ${error.response.status}`);
       console.log(`   Data:`, error.response.data);
@@ -67,7 +67,7 @@ async function testEndpoint(
 }
 
 async function runTests() {
-  log("🚀 WhatsApp Web Clone - API Testing Suite", "bold");
+  log("WhatsApp Web Clone - API Testing Suite", "bold");
   log("==========================================", "yellow");
 
   const tests = [];
@@ -185,28 +185,28 @@ async function runTests() {
   );
 
   // Summary
-  log("\n📊 Test Results Summary", "bold");
+  log("\nTest Results Summary", "bold");
   log("======================", "yellow");
 
   const passed = tests.filter(Boolean).length;
   const total = tests.length;
   const failed = total - passed;
 
-  log(`✅ Passed: ${passed}/${total}`, passed === total ? "green" : "yellow");
+  log(`Passed: ${passed}/${total}`, passed === total ? "green" : "yellow");
   if (failed > 0) {
-    log(`❌ Failed: ${failed}/${total}`, "red");
+    log(`Failed: ${failed}/${total}`, "red");
   }
 
   if (passed === total) {
-    log("\n🎉 All tests passed! Your API is working correctly.", "green");
+    log("\nAll tests passed! Your API is working correctly.", "green");
   } else {
     log(
-      "\n⚠️  Some tests failed. Please check the backend server and database connection.",
+      "\nSome tests failed. Please check the backend server and database connection.",
       "yellow"
     );
   }
 
-  log("\n💡 Tips:", "blue");
+  log("\nTips:", "blue");
   log("- Make sure the backend server is running on port 5000");
   log("- Ensure MongoDB is connected and accessible");
   log("- Check that sample data has been seeded");
@@ -216,7 +216,7 @@ async function runTests() {
 // Run tests if this file is executed directly
 if (require.main === module) {
   runTests().catch((error) => {
-    log(`\n💥 Test suite crashed: ${error.message}`, "red");
+    log(`\nTest suite crashed: ${error.message}`, "red");
     process.exit(1);
   });
 }

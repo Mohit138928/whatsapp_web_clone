@@ -10,15 +10,15 @@ async function sendTestMessage() {
   };
 
   try {
-    console.log("📤 Sending test webhook message...");
+    console.log("Sending test webhook message...");
     const response = await axios.post(
       "http://localhost:5000/webhook",
       testMessage
     );
-    console.log("✅ Webhook message sent successfully!");
+    console.log("Webhook message sent successfully!");
     console.log("Response:", response.data);
   } catch (error) {
-    console.error("❌ Failed to send webhook message:", error.message);
+    console.error("Failed to send webhook message:", error.message);
   }
 }
 

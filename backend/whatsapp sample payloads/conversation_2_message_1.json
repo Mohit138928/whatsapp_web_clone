@@ -1,0 +1,48 @@
+{
+  "payload_type": "whatsapp_webhook",
+  "_id": "conv2-msg1-user",
+  "metaData": {
+    "entry": [
+      {
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "contacts": [
+                {
+                  "profile": {
+                    "name": "Neha Joshi"
+                  },
+                  "wa_id": "929967673820"
+                }
+              ],
+              "messages": [
+                {
+                  "from": "929967673820",
+                  "id": "wamid.HBgMOTI5OTY3NjczODIwFQIAEhggQ0FBQkNERUYwMDFGRjEyMzQ1NkZGQTk5RTJCM0I2NzY=",
+                  "timestamp": "1754401000",
+                  "text": {
+                    "body": "Hi, I saw your ad. Can you share more details?"
+                  },
+                  "type": "text"
+                }
+              ],
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "918329446654",
+                "phone_number_id": "629305560276479"
+              }
+            }
+          }
+        ],
+        "id": "30164062719905279"
+      }
+    ],
+    "gs_app_id": "conv2-app",
+    "object": "whatsapp_business_account"
+  },
+  "createdAt": "2025-08-06 12:16:40",
+  "startedAt": "2025-08-06 12:16:40",
+  "completedAt": "2025-08-06 12:16:41",
+  "executed": true
+}

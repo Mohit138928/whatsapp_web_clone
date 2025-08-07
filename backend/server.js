@@ -33,7 +33,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Message Schema
 const messageSchema = new mongoose.Schema(
@@ -82,10 +82,10 @@ const Contact = mongoose.model("Contact", contactSchema);
 
 // Socket.IO connection handling
 io.on("connection", (socket) => {
-  console.log("🔌 Client connected:", socket.id);
+  console.log("Client connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("🔌 Client disconnected:", socket.id);
+    console.log("Client disconnected:", socket.id);
   });
 });
 
@@ -205,7 +205,7 @@ app.post("/api/send", async (req, res) => {
 // Webhook endpoint for receiving messages
 app.post("/webhook", async (req, res) => {
   try {
-    console.log("📥 Webhook received:", JSON.stringify(req.body, null, 2));
+    console.log("Webhook received:", JSON.stringify(req.body, null, 2));
 
     const payload = req.body;
 
@@ -239,7 +239,7 @@ app.post("/webhook", async (req, res) => {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error("❌ Webhook processing error:", error);
+    console.error("Webhook processing error:", error);
     res.status(500).json({ error: "Webhook processing failed" });
   }
 });
@@ -273,7 +273,7 @@ async function processWhatsAppMessages(value) {
       // Check if message already exists
       const existingMessage = await Message.findOne({ id: message.id });
       if (existingMessage) {
-        console.log("📝 Message already exists:", message.id);
+        console.log("Message already exists:", message.id);
         continue;
       }
 
@@ -297,9 +297,9 @@ async function processWhatsAppMessages(value) {
       // Emit to all connected clients
       io.emit("newMessage", messageData);
 
-      console.log("✅ New message processed:", message.id);
+      console.log("New message processed:", message.id);
     } catch (error) {
-      console.error("❌ Error processing message:", error);
+      console.error("Error processing message:", error);
     }
   }
 }
@@ -330,12 +330,12 @@ async function processWhatsAppStatuses(value) {
           status: status.status,
         });
 
-        console.log("✅ Status updated:", status.id, "->", status.status);
+        console.log("Status updated:", status.id, "->", status.status);
       } else {
-        console.log("⚠️ Message not found for status update:", status.id);
+        console.log("Message not found for status update:", status.id);
       }
     } catch (error) {
-      console.error("❌ Error processing status:", error);
+      console.error("Error processing status:", error);
     }
   }
 }
@@ -386,7 +386,7 @@ async function processGenericMessage(payload) {
       });
 
       console.log(
-        "✅ Message updated:",
+        "Message updated:",
         updatedMessage.id || updatedMessage.meta_msg_id
       );
     } else {
@@ -410,12 +410,12 @@ async function processGenericMessage(payload) {
       io.emit("newMessage", messageData);
 
       console.log(
-        "✅ New message created:",
+        "New message created:",
         newMessage.id || newMessage.meta_msg_id
       );
     }
   } catch (error) {
-    console.error("❌ Error processing generic message:", error);
+    console.error("Error processing generic message:", error);
   }
 }
 
@@ -494,18 +494,18 @@ app.post("/api/contacts", async (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-  console.error("❌ Server error:", error);
+  console.error("Server error:", error);
   res.status(500).json({ error: "Internal server error" });
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📡 Environment: ${process.env.NODE_ENV || "development"}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
   console.log(
-    `🔗 MongoDB: ${
-      mongoose.connection.readyState === 1 ? "✅ Connected" : "❌ Disconnected"
+    `MongoDB: ${
+      mongoose.connection.readyState === 1 ? "Connected" : "Disconnected"
     }`
   );
 });

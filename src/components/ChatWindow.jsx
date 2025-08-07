@@ -39,7 +39,7 @@ const MessageBubble = ({ message }) => {
       <div
         className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
           isOutgoing
-            ? "bg-green-500 text-white rounded-br-none"
+            ? "bg-green-800 text-white rounded-br-none"
             : "bg-white dark:bg-gray-700 border rounded-bl-none"
         }`}
       >

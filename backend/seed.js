@@ -227,35 +227,35 @@ const sampleMessages = [
 
 async function seedDatabase() {
   try {
-    console.log("🌱 Starting database seeding...");
+    console.log("Starting database seeding...");
 
     // Clear existing data
     await Message.deleteMany({});
     await Contact.deleteMany({});
-    console.log("🧹 Cleared existing data");
+    console.log("Cleared existing data");
 
     // Insert contacts
     await Contact.insertMany(sampleContacts);
-    console.log("👥 Inserted sample contacts");
+    console.log("Inserted sample contacts");
 
     // Insert messages
     await Message.insertMany(sampleMessages);
-    console.log("💬 Inserted sample messages");
+    console.log("Inserted sample messages");
 
-    console.log("✅ Database seeding completed successfully!");
+    console.log("Database seeding completed successfully!");
     console.log(
-      `📊 Inserted ${sampleContacts.length} contacts and ${sampleMessages.length} messages`
+      `Inserted ${sampleContacts.length} contacts and ${sampleMessages.length} messages`
     );
 
     // Show summary
     const chatsCount = await Message.distinct("wa_id").then(
       (ids) => ids.length
     );
-    console.log(`📱 Created ${chatsCount} chat conversations`);
+    console.log(`Created ${chatsCount} chat conversations`);
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error seeding database:", error);
+    console.error("Error seeding database:", error);
     process.exit(1);
   }
 }

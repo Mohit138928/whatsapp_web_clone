@@ -1,0 +1,48 @@
+{
+  "payload_type": "whatsapp_webhook",
+  "_id": "conv2-msg2-api",
+  "metaData": {
+    "entry": [
+      {
+        "changes": [
+          {
+            "field": "messages",
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                "display_phone_number": "918329446654",
+                "phone_number_id": "629305560276479"
+              },
+              "contacts": [
+                {
+                  "profile": {
+                    "name": "Neha Joshi"
+                  },
+                  "wa_id": "929967673820"
+                }
+              ],
+              "messages": [
+                {
+                  "from": "918329446654",
+                  "id": "wamid.HBgMOTI5OTY3NjczODIwFQIAEhggM0RFNDkxRjEwNDhDQzgwMzk3NzA1ODc1RkU3QzI0MzU=",
+                  "timestamp": "1754401030",
+                  "text": {
+                    "body": "Hi Neha! Absolutely. We offer curated home decor pieces—are you looking for nameplates, wall art, or something else?"
+                  },
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        ],
+        "id": "30164062719905280"
+      }
+    ],
+    "gs_app_id": "conv2-app",
+    "object": "whatsapp_business_account"
+  },
+  "createdAt": "2025-08-06 12:17:10",
+  "startedAt": "2025-08-06 12:17:10",
+  "completedAt": "2025-08-06 12:17:11",
+  "executed": true
+}
