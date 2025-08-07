@@ -38,10 +38,10 @@ const ChatItem = ({ chat, isActive, onClick }) => {
     if (!message) return "No messages yet";
 
     // Handle different message types
-    if (message.message_type === "image") return "📷 Photo";
-    if (message.message_type === "document") return "📄 Document";
-    if (message.message_type === "video") return "🎥 Video";
-    if (message.message_type === "audio") return "🎵 Audio";
+    if (message.message_type === "image") return "Photo";
+    if (message.message_type === "document") return "Document";
+    if (message.message_type === "video") return "Video";
+    if (message.message_type === "audio") return "Audio";
 
     return message.text || "No messages yet";
   };
@@ -79,11 +79,6 @@ const ChatItem = ({ chat, isActive, onClick }) => {
               <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 {formatDate(lastMessage?.timestamp)}
               </span>
-              {chat.unreadCount > 0 && (
-                <div className="bg-green-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5">
-                  {chat.unreadCount > 99 ? "99+" : chat.unreadCount}
-                </div>
-              )}
             </div>
           </div>
 
@@ -103,6 +98,11 @@ const ChatItem = ({ chat, isActive, onClick }) => {
               {isMessageDeleted && <Lock className="w-3 h-3 inline mr-1" />}
               {formatMessagePreview(lastMessage)}
             </p>
+            {chat.unreadCount > 0 && (
+                <div className="bg-green-500 text-white text-xs rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5">
+                  {chat.unreadCount > 99 ? "99+" : chat.unreadCount}
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -208,35 +208,34 @@ export default function ChatList({ chats, activeChat, onChatSelect }) {
       </div>
 
       {/* Chat List */}
-      <ScrollArea className="flex-1">
-        <div className="bg-white dark:bg-[#0b141a]">
-          {filteredChats.length > 0 ? (
-            filteredChats.map((chat) => (
-              <ChatItem
-                key={chat.wa_id}
-                chat={chat}
-                isActive={activeChat?.wa_id === chat.wa_id}
-                onClick={onChatSelect}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-              {searchQuery ? (
-                <>
-                  <Search className="w-12 h-12 mb-4 text-gray-300" />
-                  <p>No chats found for "{searchQuery}"</p>
-                </>
-              ) : (
-                <>
-                  <MessageCircle className="w-12 h-12 mb-4 text-gray-300" />
-                  <p>No chats available</p>
-                  <p className="text-sm mt-2">Start a new conversation</p>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+
+      <div className="bg-white dark:bg-[#0b141a]">
+        {filteredChats.length > 0 ? (
+          filteredChats.map((chat) => (
+            <ChatItem
+              key={chat.wa_id}
+              chat={chat}
+              isActive={activeChat?.wa_id === chat.wa_id}
+              onClick={onChatSelect}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+            {searchQuery ? (
+              <>
+                <Search className="w-12 h-12 mb-4 text-gray-300" />
+                <p>No chats found for "{searchQuery}"</p>
+              </>
+            ) : (
+              <>
+                <MessageCircle className="w-12 h-12 mb-4 text-gray-300" />
+                <p>No chats available</p>
+                <p className="text-sm mt-2">Start a new conversation</p>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
