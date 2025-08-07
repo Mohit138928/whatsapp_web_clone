@@ -14,6 +14,16 @@ import {
   Check,
   CheckCheck,
   ArrowLeft,
+  Plus,
+  Mic,
+  Smile,
+  Paperclip,
+  Camera,
+  Image,
+  FileText,
+  Contact,
+  MapPin,
+  X,
 } from "lucide-react";
 
 const MessageBubble = ({ message }) => {
@@ -62,8 +72,11 @@ const MessageBubble = ({ message }) => {
 export default function ChatWindow({ chat, onSendMessage, onBack }) {
   const [newMessage, setNewMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [showAttachments, setShowAttachments] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const attachmentMenuRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -72,6 +85,24 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
   useEffect(() => {
     scrollToBottom();
   }, [chat?.messages]);
+
+  // Close attachments menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        attachmentMenuRef.current &&
+        !attachmentMenuRef.current.contains(event.target)
+      ) {
+        setShowAttachments(false);
+      }
+    };
+
+    if (showAttachments) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showAttachments]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -90,6 +121,11 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
     try {
       await onSendMessage(messageData);
       setNewMessage("");
+      // Reset textarea height
+      if (inputRef.current) {
+        inputRef.current.style.height = "auto";
+        inputRef.current.style.height = "20px";
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
     } finally {
@@ -104,6 +140,63 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
       handleSendMessage(e);
     }
   };
+
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+    // Auto-resize textarea
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 80) + "px";
+  };
+
+  const handleAttachmentClick = () => {
+    setShowAttachments(!showAttachments);
+  };
+
+  const handleFileUpload = (type) => {
+    // This would handle different file types
+    console.log(`Upload ${type} file`);
+    setShowAttachments(false);
+    // You can implement actual file upload logic here
+  };
+
+  const attachmentOptions = [
+    {
+      icon: FileText,
+      label: "Document",
+      color: "bg-blue-500",
+      action: () => handleFileUpload("document"),
+    },
+    {
+      icon: Camera,
+      label: "Camera",
+      color: "bg-pink-500",
+      action: () => handleFileUpload("camera"),
+    },
+    {
+      icon: Image,
+      label: "Gallery",
+      color: "bg-purple-500",
+      action: () => handleFileUpload("gallery"),
+    },
+    {
+      icon: Mic,
+      label: "Audio",
+      color: "bg-orange-500",
+      action: () => handleFileUpload("audio"),
+    },
+    {
+      icon: MapPin,
+      label: "Location",
+      color: "bg-green-500",
+      action: () => handleFileUpload("location"),
+    },
+    {
+      icon: Contact,
+      label: "Contact",
+      color: "bg-blue-600",
+      action: () => handleFileUpload("contact"),
+    },
+  ];
 
   if (!chat) {
     return (
@@ -216,32 +309,115 @@ export default function ChatWindow({ chat, onSendMessage, onBack }) {
       </div>
 
       {/* Message Input */}
-      <form
-        onSubmit={handleSendMessage}
-        className="p-4 border-none  bg-white dark:bg-[#0b141a]"
-      >
-        <div className="flex items-center space-x-2">
-          <div className="flex-1 relative">
-            <Input
-              ref={inputRef}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="pr-12 focus:border-none focus:ring-0 "
-              disabled={isTyping}
-            />
-          </div>
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
-            disabled={!newMessage.trim() || isTyping}
-            title="Send message"
+      <div className="relative">
+        {/* Attachment Menu */}
+        {showAttachments && (
+          <div
+            ref={attachmentMenuRef}
+            className="absolute bottom-20 left-4 bg-white dark:bg-[#233138] rounded-lg shadow-lg p-3 z-10 border border-gray-200 dark:border-gray-600"
           >
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
-      </form>
+            <div className="grid grid-cols-3 gap-3 w-48">
+              {attachmentOptions.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={option.action}
+                  className="flex flex-col items-center p-3 hover:bg-gray-100 dark:hover:bg-[#2a3942] rounded-lg transition-colors group"
+                >
+                  <div
+                    className={`w-12 h-12 ${option.color} rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
+                  >
+                    <option.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+                    {option.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <form
+          onSubmit={handleSendMessage}
+          className="p-4 bg-white dark:bg-[#0b141a] border-t border-gray-200 dark:border-gray-700"
+        >
+          <div className="flex items-end space-x-2">
+            {/* Attachment Button */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleAttachmentClick}
+              className="flex-shrink-0 w-10 h-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              {showAttachments ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Plus className="w-5 h-5" />
+              )}
+            </Button>
+
+            {/* Message Input Container */}
+            <div className="flex-1 relative bg-white dark:bg-[#2a3942] rounded-full border border-gray-200 dark:border-gray-600 flex items-center">
+              {/* Emoji Button */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="flex-shrink-0 w-10 h-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-1"
+              >
+                <Smile className="w-5 h-5" />
+              </Button>
+
+              {/* Text Input */}
+              <div className="flex-1 px-1">
+                <textarea
+                  ref={inputRef}
+                  value={newMessage}
+                  onChange={handleInputChange}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type a message"
+                  className="w-full bg-transparent border-none outline-none resize-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 py-2 px-2 max-h-20 min-h-[20px] leading-5 content-center items-center flex"
+                  rows="1"
+                  disabled={isTyping}
+                />
+              </div>
+
+              {/* Attachment/Paperclip Button (inside input) */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="flex-shrink-0 w-10 h-10 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mr-1"
+              >
+                <Paperclip className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Send/Mic Button */}
+            <Button
+              type={newMessage.trim() ? "submit" : "button"}
+              className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 ${
+                newMessage.trim()
+                  ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+                  : "bg-green-500 hover:bg-green-600 text-white"
+              }`}
+              disabled={isTyping}
+              onClick={
+                !newMessage.trim()
+                  ? () => console.log("Start voice recording")
+                  : undefined
+              }
+            >
+              {newMessage.trim() ? (
+                <Send className="w-5 h-5" />
+              ) : (
+                <Mic className="w-5 h-5" />
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
