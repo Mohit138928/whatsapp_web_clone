@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import ChatList from "./ChatList";
 import ChatWindow from "./ChatWindow";
+import WhatsAppLoader from "./WhatsAppLoader";
 import apiClient from "@/lib/api";
 
 export default function WhatsAppClone() {
@@ -70,9 +71,10 @@ export default function WhatsAppClone() {
       setChats(chatsData);
     } catch (error) {
       console.error("Failed to load chats:", error);
-    } finally {
-      setLoading(false);
+      // On error, still show the loading screen for a bit
+      setTimeout(() => setLoading(false), 2000);
     }
+    // Don't set loading to false here - let the loader component handle it
   };
 
   const handleChatSelect = (chat) => {
@@ -122,14 +124,7 @@ export default function WhatsAppClone() {
   };
 
   if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading WhatsApp...</p>
-        </div>
-      </div>
-    );
+    return <WhatsAppLoader onLoadingComplete={() => setLoading(false)} />;
   }
 
   return (
